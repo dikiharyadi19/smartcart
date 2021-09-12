@@ -7,6 +7,10 @@ import vuetify from "./plugins/vuetify";
 
 Vue.config.productionTip = false;
 
+import VueQrcodeReader from "vue-qrcode-reader";
+
+Vue.use(VueQrcodeReader);
+
 new Vue({
   router,
   store,

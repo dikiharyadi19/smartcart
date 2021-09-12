@@ -1,0 +1,1 @@
+https://github.com/gruhn/vue-qrcode-reader
