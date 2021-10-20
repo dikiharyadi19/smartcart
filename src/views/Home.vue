@@ -15,8 +15,8 @@
         </p>
 
         <div>
-          <v-btn x-large class="" outlined color="indigo"> Selengkapnya </v-btn>
-          <v-btn x-large class="ml-1" color="primary" link router to="Login">
+          <v-btn x-medium class="ml-3" outlined color="indigo"> Selengkapnya </v-btn>
+          <v-btn x-medium class="ml-3" color="primary" link router to="Login">
             Activate Cart
           </v-btn>
         </div>
