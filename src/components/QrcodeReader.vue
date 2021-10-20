@@ -24,7 +24,7 @@ export default {
     onDecode(decodedString) {
       this.decoded = decodedString;
       console.log(decodedString);
-      if (this.decoded != "" && this.decoded === undefined) {
+      if (this.decoded != "" && this.decoded != undefined) {
         this.$router.push({ name: "Cart", params: { id: this.decoded } });
       }
     },
