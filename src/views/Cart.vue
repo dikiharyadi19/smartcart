@@ -1,13 +1,16 @@
 <template>
   <v-container>
+    <span
+      ><b>Customer Cart ID: {{ customer.customer_cart_id }}</b></span
+    >
     <v-sheet id="scroll-threshold-example" class="mx-auto overflow-hidden">
       <!-- max-height="600" -->
       <!-- <h2>Keranjang Belanja</h2>
       product:
-      {{ products }} -->
+      {{ productLocalStorage }} -->
       <v-row dense class="mt-6">
         <v-col
-          v-show="products.length !== 0"
+          v-show="products.length !== 0 && products.length !== null"
           v-for="(item, i) in products"
           :key="i"
           cols="12"
@@ -90,8 +93,8 @@
             </div>
           </v-card>
         </v-col>
-        <v-col>
-          <v-card color="white">
+        <v-col v-show="products.length != 0">
+          <v-card color="gray">
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-subtitle class="text-h6"> Total Harga </v-card-subtitle>
@@ -100,7 +103,12 @@
                 </v-card-subtitle>
               </div>
               <div>
-                <v-btn class="mt-14 mb-14 mr-4" outlined color="green">
+                <v-btn
+                  class="mt-14 mb-14 mr-4"
+                  outlined
+                  color="green"
+                  @click="submit"
+                >
                   Beli ({{ products.length }})
                 </v-btn>
               </div>
@@ -114,6 +122,7 @@
   </v-container>
 </template>
 <script>
+import axios from "axios";
 import createNumberMask from "text-mask-addons/dist/createNumberMask";
 const currencyMask = createNumberMask({
   prefix: "Rp.",
@@ -129,8 +138,11 @@ export default {
   },
   data() {
     return {
+      customer: {},
+      customer_cart_id: "",
       currencyMask,
       product: {},
+      // productLocalStorage: [],
       products: [
         // {
         //   id: 1,
@@ -157,46 +169,130 @@ export default {
   computed: {
     total() {
       var total = 0;
-      total = this.products
-        .map((o) => o.price)
-        .reduce((a, c) => {
-          return a + c;
-        });
+      if (this.products.length != 0) {
+        total = this.products
+          .map((o) => o.price)
+          .reduce((a, c) => {
+            return a + c;
+          });
+      }
       return total;
+    },
+    setProducts: {
+      // getter
+      get: function () {
+        let products = [];
+        let productAPI = JSON.parse(localStorage.getItem("product-from-api"));
+
+        console.log("productAPI");
+        console.log(productAPI.length);
+
+        let productPushher = JSON.parse(
+          localStorage.getItem("product-from-api")
+        );
+
+        console.log("product pusher");
+        console.log(productPushher.length);
+
+        const productsMap = new Map();
+
+        if (productAPI.length != 0) {
+          for (const item of productAPI) {
+            if (!productsMap.has(item)) {
+              productsMap.set(item, true);
+              products.push(item);
+            }
+          }
+        }
+
+        if (productPushher.length != 0) {
+          for (const item of productPushher) {
+            if (!productsMap.has(item)) {
+              productsMap.set(item, true);
+              products.push(item);
+            }
+          }
+        }
+
+        return products;
+      },
+      // setter
+      set: function (newValue) {
+        const productsMap = new Map();
+        if (newValue.length != 0) {
+          for (const item of newValue) {
+            if (!productsMap.has(item)) {
+              productsMap.set(item, true);
+              this.products.push(item);
+            }
+          }
+        }
+        // this.products = newValue;
+      },
     },
   },
   created() {
-    this.getParams();
-    this.setProductFromLocal();
+    this.getDataCustomer();
     this.subscribeChannell();
-    // this.$pusher.unsubscribe(
-    //   "06ab77bb75452d0ba45e72dbc8aa13ce89ad1491@7c302317-cb18-4f66-b3ce-a26286491625-cart"
-    // );
+    this.getListItem();
   },
   methods: {
-    getParams() {
-      console.log(this.$route.params.id);
+    submit() {
+      localStorage.setItem(
+        "checkout",
+        JSON.stringify({
+          total: this.total,
+          products: this.products,
+        })
+      );
+      this.$router.push("/checkout");
     },
-    setProductFromLocal() {
-      this.products = JSON.parse(localStorage.getItem("products"));
+    getListItem() {
+      axios
+        .get(
+          "https://smartcart-add.herokuapp.com/api/carts/list/" +
+            this.customer.cart.cart_id
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.status === "00") {
+            localStorage.setItem(
+              "product-from-api",
+              JSON.stringify(response.data.data)
+            );
+            console.log("test");
+            console.log(JSON.stringify(response.data.data));
+          } else if (response.data.status === "01") {
+            alert("Error Mengambil Data!!");
+          }
+        });
+    },
+    getDataCustomer() {
+      this.customer = JSON.parse(localStorage.getItem("customer"));
     },
     subscribeChannell() {
       Pusher.logToConsole = true;
-      let products = [];
+      let productPusher = [];
 
-      let pusher = new Pusher("586a4442c5412f2724a9", {
+      let pusher = new Pusher("b3389a8ce46a6230dd82", {
         cluster: "ap1",
       });
 
-      var channel = pusher.subscribe(
-        "3c96b0015154b1885fb9021baef7bb60ccb2fdf0@0b7becb7-ef8b-4537-b9a5-e77aa3c402fb-cart"
-      );
+      // var channel = pusher.subscribe(
+      //   "3c96b0015154b1885fb9021baef7bb60ccb2fdf0@0b7becb7-ef8b-4537-b9a5-e77aa3c402fb-cart"
+      // );
+      var channel = pusher.subscribe(this.$route.params.id);
+
       channel.bind("add-to-cart-event", function (data) {
         // this.product.push(JSON.stringify(data));
-        products = JSON.parse(localStorage.getItem("products"));
-        products.push(data);
-        localStorage.setItem("products", JSON.stringify(products));
-        this.setProductFromLocal();
+        // productLocalStorage = JSON.parse(
+        //   localStorage.getItem("productLocalStorage")
+        // );
+        productPusher.push(data);
+        localStorage.setItem(
+          "product-from-pusher",
+          JSON.stringify(productPusher)
+        );
       });
     },
     removeProduct(id) {

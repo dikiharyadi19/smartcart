@@ -3,6 +3,10 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Cart from "../views/Cart.vue";
+import Checkout from "../views/Checkout.vue";
+import Otp from "../views/Otp.vue";
+import Payment from "../views/Payment.vue";
+import Thankyou from "../views/Thankyou.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +25,26 @@ const routes = [
     path: "/cart/:id",
     name: "Cart",
     component: Cart,
+  },
+  {
+    path: "/checkout",
+    name: "Checkout",
+    component: Checkout,
+  },
+  {
+    path: "/payment/:id",
+    name: "Payment",
+    component: Payment,
+  },
+  {
+    path: "/payment-method/:id",
+    name: "Otp",
+    component: Otp,
+  },
+  {
+    path: "/thankyou",
+    name: "Thankyou",
+    component: Thankyou,
   },
   {
     path: "/about",
