@@ -181,22 +181,16 @@ export default {
         let products = [];
         let productAPI = JSON.parse(localStorage.getItem("product-from-api"));
 
-        // console.log("productAPI");
-        // console.log(productAPI.length);
-
         let productPushher = JSON.parse(
           localStorage.getItem("product-from-pusher")
         );
-
-        // console.log("product pusher");
-        // console.log(productPushher.length);
 
         const productsMap = new Map();
 
         if (productAPI.length != 0) {
           for (const item of productAPI) {
-            if (!productsMap.has(item)) {
-              productsMap.set(item, true);
+            if (!productsMap.has(item.item_id)) {
+              productsMap.set(item.item_id, true);
               products.push(item);
             }
           }
@@ -204,8 +198,8 @@ export default {
 
         if (productPushher.length != 0) {
           for (const item of productPushher) {
-            if (!productsMap.has(item)) {
-              productsMap.set(item, true);
+            if (!productsMap.has(item.item_id)) {
+              productsMap.set(item.item_id, true);
               products.push(item);
             }
           }
