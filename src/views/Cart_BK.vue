@@ -214,7 +214,20 @@ export default {
         return products;
       },
       // setter
-      set: function () {},
+      set: function () {
+        // console.log("sdasdasd");
+        // console.log(newValue);
+        // const productsMap = new Map();
+        // if (newValue.length != 0) {
+        //   for (const item of newValue) {
+        //     if (!productsMap.has(item)) {
+        //       productsMap.set(item, true);
+        //       this.products.push(item);
+        //     }
+        //   }
+        // }
+        // this.products = newValue;
+      },
     },
   },
   created() {
@@ -253,6 +266,8 @@ export default {
               "product-from-api",
               JSON.stringify(response.data.data)
             );
+            // console.log("test");
+            // console.log(JSON.stringify(response.data.data));
           } else if (response.data.status === "01") {
             alert("Error Data!!");
           }
@@ -286,11 +301,15 @@ export default {
         var newDataArray = [];
         if (productLocal.length != 0) {
           const mapProductId = new Map();
+          const mapProductId2 = new Map();
+          const mapProductId3 = new Map();
+          console.log(
+            "before push data sama dengan data.item_id=>",
+            mapProductId
+          );
 
-          // start loop
           for (const item of productLocal) {
             if (item.item_id === data.item_id) {
-              //start
               if (!mapProductId.has(data.item_id)) {
                 mapProductId.set(data.item_id, true);
                 newDataArray.push({
@@ -301,42 +320,55 @@ export default {
                   qty: item.qty + data.qty,
                   type: item.type,
                 });
+                // console.log("item.item_id === data.item_id", {
+                //   image: item.image,
+                //   item_id: item.item_id,
+                //   order_id: item.order_id,
+                //   price: item.price + data.price,
+                //   qty: item.qty + data.qty,
+                //   type: item.type,
+                // });
+              }
+            } else {
+              console.log(
+                "before push data else bkan = data =>",
+                mapProductId2
+              );
+              if (!mapProductId2.has(data.item_id)) {
+                mapProductId2.set(data.item_id, true);
+                // console.log("item.item_id === data.item_id", data);
+                newDataArray.push(data);
               }
             }
-            //end
 
-            //start
-            if (!mapProductId.has(item.item_id)) {
-              mapProductId.set(item.item_id, true);
-              newDataArray.push(item);
+            if (item.item_id != data.item_id) {
+              console.log(
+                "before push data if bukan data.item_id=>",
+                mapProductId3
+              );
+              if (!mapProductId3.has(data.item_id)) {
+                // mapProductId3.set(data.item_id, true);
+                console.log("newDataArray.push(item);", item);
+                newDataArray.push(item);
+              }
+              // console.log("newDataArray.push(data);", data);
+              // newDataArray.push(data);
             }
-            //end
-
-            //start
-            if (!mapProductId.has(data.item_id)) {
-              mapProductId.set(data.item_id, true);
-              newDataArray.push(data);
-            }
-            //end
           }
-          //end loop
-
-          //product done colleted
+          console.log("newDataArray", newDataArray);
           localStorage.setItem(
             "product-from-pusher",
             JSON.stringify(newDataArray)
           );
-          //product done colleted
         } else {
-          // kalo data masih [] langsung push
           productPusher.push(data);
           localStorage.setItem(
             "product-from-pusher",
             JSON.stringify(productPusher)
           );
-          // kalo data masih [] langsung push
         }
-        window.location.reload();
+        // window.location.reload();
+        // this.$forceUpdate();
       });
     },
     addProduct(data) {

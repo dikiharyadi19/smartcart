@@ -456,6 +456,7 @@ export default {
     pusher.unsubscribe(JSON.parse(localStorage.getItem("customer")).cart_name);
     this.getDataCustomer();
     this.logOut();
+    localStorage.clear();
   },
   methods: {
     getDataCustomer() {
@@ -467,19 +468,7 @@ export default {
           "https://smartcart-add.herokuapp.com/api/carts/logout/" +
             this.customer.cart.cart_id
         )
-        .then((response) => {
-          console.log(response);
-          if (response.data.status === "00") {
-            localStorage.setItem(
-              "product-from-api",
-              JSON.stringify(response.data.data)
-            );
-            console.log("test");
-            console.log(JSON.stringify(response.data.data));
-          } else if (response.data.status === "01") {
-            alert("Error Mengambil Data!!");
-          }
-        });
+        .then(() => {});
     },
   },
 };

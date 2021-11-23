@@ -35,7 +35,35 @@
 </template>
 
 <script>
+import Pusher from "pusher-js"; // import Pusher
+import axios from "axios";
 export default {
-  name: "Home",
+  data() {
+    return {
+      customer: {},
+    };
+  },
+  created() {
+    let pusher = new Pusher("b3389a8ce46a6230dd82", {
+      cluster: "ap1",
+    });
+    pusher.unsubscribe(JSON.parse(localStorage.getItem("customer")).cart_name);
+    this.getDataCustomer();
+    this.logOut();
+    localStorage.clear();
+  },
+  methods: {
+    getDataCustomer() {
+      this.customer = JSON.parse(localStorage.getItem("customer"));
+    },
+    logOut() {
+      axios
+        .get(
+          "https://smartcart-add.herokuapp.com/api/carts/logout/" +
+            this.customer.cart.cart_id
+        )
+        .then(() => {});
+    },
+  },
 };
 </script>

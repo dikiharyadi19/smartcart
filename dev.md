@@ -19,3 +19,10 @@ add to package.json after start
 
 create Procfile
 `web: nuxt start`
+
+# Note
+subscribe channel
+tampung dari local ke variable
+looping
+cocoking kalo sama jngn di tambahin cuma tambah pricenya sama qty, 
+kalo beda tambahin
