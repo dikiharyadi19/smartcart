@@ -19,12 +19,10 @@
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-title class="text-h5">{{
-                  item.product_name || "nama produk"
+                  item.product_name
                 }}</v-card-title>
 
-                <v-card-subtitle>{{
-                  item.type || "tipe produk"
-                }}</v-card-subtitle>
+                <v-card-subtitle>{{ item.type }}</v-card-subtitle>
                 <v-card-title
                   >{{ item.price | VMask(currencyMask) }}
                 </v-card-title>
@@ -336,7 +334,7 @@ export default {
           );
           // kalo data masih [] langsung push
         }
-        window.location.reload();
+        // window.location.reload();
       });
     },
     removeProduct(data) {
