@@ -15,7 +15,9 @@
         </p>
 
         <div>
-          <v-btn x-medium class="ml-3" outlined color="indigo"> Selengkapnya </v-btn>
+          <v-btn x-medium class="ml-3" outlined color="indigo">
+            Selengkapnya
+          </v-btn>
           <v-btn x-medium class="ml-3" color="primary" link router to="Login">
             Activate Cart
           </v-btn>
@@ -47,10 +49,14 @@ export default {
     let pusher = new Pusher("b3389a8ce46a6230dd82", {
       cluster: "ap1",
     });
-    pusher.unsubscribe(JSON.parse(localStorage.getItem("customer")).cart_name);
-    this.getDataCustomer();
-    this.logOut();
-    localStorage.clear();
+    if (localStorage.getItem("customer") != null) {
+      pusher.unsubscribe(
+        JSON.parse(localStorage.getItem("customer")).cart_name
+      );
+      this.getDataCustomer();
+      this.logOut();
+      localStorage.clear();
+    }
   },
   methods: {
     getDataCustomer() {

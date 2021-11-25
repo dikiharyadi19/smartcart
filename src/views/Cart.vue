@@ -35,7 +35,7 @@
                     fab
                     icon
                     color="red"
-                    @click="removeProduct(item.id)"
+                    @click="removeProduct(item)"
                   >
                     <v-icon class="mt-2">mdi-trash-can-outline</v-icon>
                   </v-btn>
@@ -180,7 +180,7 @@ export default {
       get: function () {
         let products = [];
         let productAPI = JSON.parse(localStorage.getItem("product-from-api"));
-
+        console.log("katanya length gaada", productAPI);
         let productPushher = JSON.parse(
           localStorage.getItem("product-from-pusher")
         );
@@ -223,6 +223,11 @@ export default {
       if (data === null) {
         localStorage.setItem("product-from-pusher", JSON.stringify([]));
       }
+
+      let data2 = JSON.parse(localStorage.getItem("product-from-api"));
+      if (data2 === null) {
+        localStorage.setItem("product-from-api", JSON.stringify([]));
+      }
     },
     submit() {
       localStorage.setItem(
@@ -238,7 +243,7 @@ export default {
       axios
         .get(
           "https://smartcart-add.herokuapp.com/api/carts/list/" +
-            this.customer.cart.cart_id
+            this.customer.cart.id
         )
         .then((response) => {
           // console.log(response);
@@ -288,6 +293,7 @@ export default {
               if (!mapProductId.has(data.item_id)) {
                 mapProductId.set(data.item_id, true);
                 newDataArray.push({
+                  product_name: item.product_name,
                   image: item.image,
                   item_id: item.item_id,
                   order_id: item.order_id,
@@ -333,11 +339,26 @@ export default {
         window.location.reload();
       });
     },
-    addProduct(data) {
-      this.products.push(data);
-    },
-    removeProduct(id) {
-      console.log(id);
+    removeProduct(data) {
+      var newDataArray = [];
+      let productLocal = JSON.parse(
+        localStorage.getItem("product-from-pusher")
+      );
+
+      for (const item of productLocal) {
+        if (data.item_id != item.item_id) {
+          newDataArray.push(item);
+        } else {
+          console.log("hapus produk ini", item);
+        }
+      }
+
+      //product done colleted
+      localStorage.setItem("product-from-pusher", JSON.stringify(newDataArray));
+      //product done colleted
+      window.location.reload();
+
+      console.log(data);
     },
     plusQty(item) {
       // console.log(item);
