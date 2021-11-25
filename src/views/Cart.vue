@@ -264,7 +264,7 @@ export default {
       Pusher.logToConsole = true;
       let productPusher = [];
 
-      let pusher = new Pusher("b3389a8ce46a6230dd82", {
+      let pusher = new Pusher("320cf777f34819c0ec61", {
         cluster: "ap1",
       });
 
