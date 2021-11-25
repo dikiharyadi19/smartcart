@@ -19,7 +19,7 @@
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-title class="text-h5">{{
-                  item.name || "nama produk"
+                  item.product_name || "nama produk"
                 }}</v-card-title>
 
                 <v-card-subtitle>{{
